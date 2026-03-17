@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Playfair_Display, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+
+const GA_ID = "G-7421H6YBD0";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -29,11 +33,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
+      </head>
       <body
         className={`${playfair.variable} ${inter.variable} font-serif antialiased`}
         style={{ fontFamily: 'var(--font-playfair), serif' }}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
